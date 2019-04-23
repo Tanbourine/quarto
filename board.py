@@ -62,19 +62,15 @@ class Board(object):
         win_cond, win_pieces = self.horiz_win()
         if win_cond:
             print "you win!"
-            print win_cond, win_pieces
-
-        # self.game_over(self.is_win_cond())
-        # if self.is_win_cond():
-        #     self.game_over(0b0100)
+            print "Condition: {0:4b}\nPieces: {1}".format(win_cond, win_pieces)
 
 
     def horiz_win(self):
         for i in range(4):
             # xnor entire row
             win_cond = xnor(self.board[i])
-            if win_cond:
-                return win_cond, self.board[i]
+            return win_cond, self.board[i]
+
 
 
 
@@ -135,7 +131,7 @@ def create_pieces():
     return library
 
 
-def xnor(*args):
+def xnor(pieces):
     # Truth table
     # A | B | Result
     # -------------
@@ -143,12 +139,19 @@ def xnor(*args):
     # 0 | 1 | 0
     # 1 | 0 | 0
     # 1 | 1 | 1
-    for piece in args:
+
+    # filters out the -1's
+    for piece in pieces:
         if piece < 0:
+            # if there are any -1's just return False
             return 0
-    val = args[0]
-    for i in range(1, len(args)):
-        val = 0b1111 -(val ^ args[i])
+
+    # initialize first val
+    val = pieces[0]
+    for i in range(1, len(pieces)):
+        # perform xnor on each value
+        val = 0b1111 - (val ^ pieces[i])
+        print("{0:4b}".format(val))
     return val
 
 def bit_and(*args):
