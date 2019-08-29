@@ -14,6 +14,7 @@
 ********************************************
 """
 
+
 class Piece(object):
 
     """This will hold all the properties for a single piece."""
@@ -41,22 +42,25 @@ class Piece(object):
         self.indent = is_indent(id)
         self.hatch = is_hatch(id)
 
+
 def is_shape(id):
     return id & 0b1000 > 0
+
 
 def is_color(id):
     return id & 0b0100 > 0
 
+
 def is_indent(id):
     return id & 0b0010 > 0
+
 
 def is_hatch(id):
     return id & 0b0001 > 0
 
 
-
 def main():
-    id = 15
+    id = 3
     # create new instance of the Piece object
     my_piece = Piece(id)
 
@@ -66,7 +70,6 @@ def main():
     print(my_piece.color)
     print(my_piece.indent)
     print(my_piece.hatch)
-
 
 
 if __name__ == '__main__':
