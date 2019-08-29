@@ -11,8 +11,22 @@ class Board(object):
 
     def __init__(self):
         # create board
+        self.win = False
+        self.new_game()
+
+    def new_game(self):
+        self.create_board()
+        self.create_pieces()
+        self.win = False
+        print("\n==============================\n")
+        print("Welcome to Quarto!")
+        print("Available Pieces: {}".format(self.library))
+        print("Board:")
+        self.disp_board()
+        print("==============================\n")
+
+    def create_board(self):
         self.board = [[-1 for col in range(4)] for row in range(4)]
-        self.library = create_pieces()
 
     def disp_board(self):
         for row in self.board:
@@ -52,6 +66,7 @@ class Board(object):
 
         else:
             # if it's an valid move, place the piece and remove from library
+            print("Placed {} on {}".format(id, (row, col)))
             self.board[row][col] = id
             self.library.remove(id)
 
@@ -98,6 +113,7 @@ class Board(object):
             self.game_over(win_cond, pieces, 'diag_bl_to_tr')
 
     def game_over(self, win_cond, pieces, direction):
+        self.win = True
         prop = bin2prop(win_cond)
         print("\n==============================\n")
         print("Game Over!")
@@ -107,13 +123,12 @@ class Board(object):
         print("\nBoard:")
         self.disp_board()
 
+    def create_pieces(self):
+        library = []
 
-def create_pieces():
-    library = []
-
-    for i in range(16):
-        library.append(i)
-    return library
+        for i in range(16):
+            library.append(i)
+        self.library = library
 
 
 def check_win_cond(pieces):
