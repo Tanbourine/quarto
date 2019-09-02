@@ -3,9 +3,8 @@
 
 # To Do List
 - [ ] combine next piece
-    * asdf
-    * asdf
-- [x] abc
+- [ ] error handling for when you type wrong number
+- [ ] set player names
 
 
 
