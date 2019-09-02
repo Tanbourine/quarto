@@ -1,27 +1,13 @@
+
 # Quarto Board Game
 
-
 # To Do List
-[ ] combine next piece
-[x] abc
-
-
-## smaller
-### smaller
-#### smaller
-
-* bullets
-* bullets
-* bullets
-* bullets
+- [ ] combine next piece
     * asdf
-        *asdf
     * asdf
+- [x] abc
 
-1. abc
-1. abc
-1. abc
-1. abc
-1. abc
+
+
 
 
