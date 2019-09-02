@@ -1,20 +1,37 @@
 #!/usr/bin/env python
 # encoding: utf-8
+"""
+********************************************
+* File Name : board.py
 
+* Created By : Darren Tan
 
-import piece
+* Creation Date : 08-26-2019
+
+* Last Modified : 08-30-2019::09:06:02 
+
+* Purpose : Manage board state and determine win conditions
+********************************************
+"""
 
 
 class Board(object):
+    """ Manages the board state
+        Creates new games, place pieces, determintes win conditions
+    """
+    # pylint: disable=superfluous-parens
 
     # origin (0, 0) is top left
 
     def __init__(self):
         # create board
         self.win = False
+        self.library = []
+        self.board = []
         self.new_game()
 
     def new_game(self):
+        """ create a new game by resetting the board and library of pieces """
         self.create_board()
         self.create_pieces()
         self.win = False
@@ -26,49 +43,57 @@ class Board(object):
         print("==============================\n")
 
     def create_board(self):
-        self.board = [[-1 for col in range(4)] for row in range(4)]
+        """ populate a 4x4 matrix of -1s """
+        self.board = [[-1 for _ in range(4)] for _ in range(4)]
+
+    def create_pieces(self):
+        """ create an array of 16 pieces to refer as ID """
+        for i in range(16):
+            self.library.append(i)
 
     def disp_board(self):
+        """ prints board state for visualization """
         for row in self.board:
             print row
         print "\n"
 
-    def get_matching_pieces(self, property):
-        # this fails if you try to match with 0b0000
-        matching_pieces = []
-        for piece in self.library:
-            if piece & property:
-                matching_pieces.append(piece)
-        return matching_pieces
-
     def is_occupied(self, row, col):
         """ anybody home?
+        since the board is initialized with -1s, as long as the value at a location
+        is > 0, a piece has been placed there
         row (int): row value to be placed at
         col (int): col value to be placed at
         returns: bool
         """
         return self.board[row][col] > 0
 
-    def is_available(self, id):
-        return id in self.library
+    def is_available(self, piece):
+        """ checks to see if the piece is in the library """
+        return piece in self.library
 
-    def place(self, id, row, col):
-        """ place a piece down onto the board
-        id (int): unique id of a piece
+    def place(self, piece, row, col):
+        """
+        place a piece down onto the board
+        args:
+        piece (int): unique id of a piece
         row (int): row to be placed at
         col (int): col to be placed at
         """
+
+        success = False
+
         if self.is_occupied(row, col):
             print "INVALID MOVE"
 
-        elif self.is_available(id) is False:
-            print "id={} IS NOT IN LIBRARY".format(id)
+        elif self.is_available(piece) is False:
+            print "id={} IS NOT IN LIBRARY".format(piece)
 
         else:
             # if it's an valid move, place the piece and remove from library
-            print("Placed {} on {}".format(id, (row, col)))
-            self.board[row][col] = id
-            self.library.remove(id)
+            self.board[row][col] = piece
+            self.library.remove(piece)
+            success = True
+            print("Placed {} on {}".format(piece, (row, col)))
 
         # show board state
         self.disp_board()
@@ -79,7 +104,10 @@ class Board(object):
         self.diag_win_tl_to_br()
         self.diag_win_bl_to_tr()
 
+        return success
+
     def horiz_win(self):
+        """ check each row of the board for win conditions"""
         for i in range(4):
             win_cond, pieces = check_win_cond(self.board[i])
             if win_cond:
@@ -87,14 +115,17 @@ class Board(object):
                 break
 
     def vert_win(self):
+        """ check each column for win conditions """
         for i in range(4):
-            pieces = [col[i] for col in self.board]
+            # row[i] will return a column
+            pieces = [row[i] for row in self.board]
             win_cond, pieces = check_win_cond(pieces)
             if win_cond:
                 self.game_over(win_cond, pieces, 'vertical')
                 break
 
     def diag_win_tl_to_br(self):
+        """ check diagonals from top left to bottom right for win conditions """
         pieces = []
         for i in range(4):
             pieces.append(self.board[i][i])
@@ -104,8 +135,10 @@ class Board(object):
             self.game_over(win_cond, pieces, 'diag_tl_to_br')
 
     def diag_win_bl_to_tr(self):
+        """ check diagonals from bottom left to top right for win conditions """
         pieces = []
         for i in range(4):
+            # start from bottom left
             pieces.append(self.board[3-i][i])
 
         win_cond, pieces = check_win_cond(pieces)
@@ -113,6 +146,7 @@ class Board(object):
             self.game_over(win_cond, pieces, 'diag_bl_to_tr')
 
     def game_over(self, win_cond, pieces, direction):
+        """ print win condition and show board """
         self.win = True
         prop = bin2prop(win_cond)
         print("\n==============================\n")
@@ -123,15 +157,9 @@ class Board(object):
         print("\nBoard:")
         self.disp_board()
 
-    def create_pieces(self):
-        library = []
-
-        for i in range(16):
-            library.append(i)
-        self.library = library
-
 
 def check_win_cond(pieces):
+    """ receives four pieces as arg and checks to see if they have matching features """
     # make sure we're getting 4 pieces to check
     assert len(pieces) == 4, "DID NOT PASS 4 PIECES TO CHECK"
 
@@ -159,6 +187,8 @@ def check_win_cond(pieces):
 
 
 def xnor(a, b):
+    # pylint: disable=invalid-name
+    """ standard xnor logic gate, tune for python's weirdness """
     # Truth table
     # A | B | Result
     # -------------
@@ -169,18 +199,19 @@ def xnor(a, b):
     return 0b1111 - (a ^ b)
 
 
-def bin2prop(id):
+def bin2prop(piece):
+    """ prints win condition back in ASCII """
     prop = []
-    if id & 0b1000:
+    if piece & 0b1000:
         prop.append('SHAPE')
 
-    if id & 0b0100:
+    if piece & 0b0100:
         prop.append('COLOR')
 
-    if id & 0b0010:
+    if piece & 0b0010:
         prop.append('INDENT')
 
-    if id & 0b0001:
+    if piece & 0b0001:
         prop.append('HATCH')
 
     # print("PROP: {}".format(prop))
@@ -189,9 +220,8 @@ def bin2prop(id):
 
 
 def main():
+    """ main runtime execution """
     board = Board()
-
-    # print(board.get_matching_pieces(0b0000))
 
     # horizontal win with zeros
     # board.place(4, 0, 0)
