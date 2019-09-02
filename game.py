@@ -8,7 +8,7 @@
 
 * Creation Date : 08-26-2019
 
-* Last Modified : 08-29-2019::10:30:22 
+* Last Modified : 08-30-2019::14:05:55 
 
 * Purpose : Quarto game orchestrator
 ********************************************
@@ -25,11 +25,18 @@ import board as bd
 
 
 class Game(object):
+    """ Orchestrates the game and allows for user interaction """
+    # pylint: disable=superfluous-parens, missing-docstring
 
     def __init__(self):
 
+        self.active_player = 0
+        self.next_player = 1
+        self.next_piece = [-1, -1]
+        self.p_names = ['Player 1', 'Player 2']
+
         self.board = bd.Board()
-        self.new_game()
+        self.first_turn()
 
     def new_game(self):
         """ re-initialize to default null values """
@@ -45,13 +52,6 @@ class Game(object):
 
     def next_turn(self):
         self.swap_active_player()
-
-        if self.active_player == 0:
-            print('Player 1:\n')
-        else:
-            self.active_player == 1
-            print('Player 2:\n')
-
         self.place_next_piece()
 
     def swap_active_player(self):
@@ -61,15 +61,6 @@ class Game(object):
         else:
             self.active_player = 0
             self.next_player = 1
-
-    def select_next_piece(self):
-        print('Available pieces: {}'.format(self.board.library))
-        piece = input(self.p_names[self.active_player] +
-                      ': Which piece would you like your opponent to play? Type "-1" to quit! >>> ')
-        assert self.board.is_available(
-            piece), "The piece you wanted to play is not available"
-        self.next_piece[self.next_player] = piece
-        self.next_turn()
 
     def place_next_piece(self):
         row = ''
@@ -90,6 +81,15 @@ class Game(object):
         else:
             self.select_next_piece()
             self.swap_active_player()
+
+    def select_next_piece(self):
+        print('Available pieces: {}'.format(self.board.library))
+        piece = input(self.p_names[self.active_player] +
+                      ': Which piece would you like your opponent to play? Type "-1" to quit! >>> ')
+        assert self.board.is_available(
+            piece), "The piece you wanted to play is not available"
+        self.next_piece[self.next_player] = piece
+        self.next_turn()
 
 
 def main():
