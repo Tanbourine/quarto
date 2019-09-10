@@ -8,7 +8,7 @@
 
 * Creation Date : 08-26-2019
 
-* Last Modified : 08-30-2019::14:05:55 
+* Last Modified : 09-10-2019::14:28:04 
 
 * Purpose : Quarto game orchestrator
 ********************************************
@@ -32,7 +32,7 @@ class Game(object):
 
         self.active_player = 0
         self.next_player = 1
-        self.next_piece = [-1, -1]
+        self.next_piece = -1
         self.p_names = ['Player 1', 'Player 2']
 
         self.board = bd.Board()
@@ -42,7 +42,7 @@ class Game(object):
         """ re-initialize to default null values """
         self.active_player = 0
         self.next_player = 1
-        self.next_piece = [-1, -1]
+        self.next_piece = -1
         self.p_names = ['Player 1', 'Player 2']
         self.first_turn()
 
@@ -65,7 +65,6 @@ class Game(object):
     def place_next_piece(self):
         row = ''
         col = ''
-        piece = self.next_piece[self.active_player]
 
         row = input(
             self.p_names[self.active_player] + ': Which row would you like the piece to be played? Type "-1" to quit! >>> ')
@@ -73,7 +72,7 @@ class Game(object):
             col = input(
                 self.p_names[self.active_player] + ': Which column would you like the piece to be played? Type "-1" to quit! >>> ')
 
-        self.board.place(piece, row, col)
+        self.board.place(self.next_piece, row, col)
         if self.board.win:
             self.board.new_game()
             self.new_game()
@@ -88,7 +87,7 @@ class Game(object):
                       ': Which piece would you like your opponent to play? Type "-1" to quit! >>> ')
         assert self.board.is_available(
             piece), "The piece you wanted to play is not available"
-        self.next_piece[self.next_player] = piece
+        self.next_piece = piece
         self.next_turn()
 
 
