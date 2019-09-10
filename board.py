@@ -8,7 +8,7 @@
 
 * Creation Date : 08-26-2019
 
-* Last Modified : 08-30-2019::09:06:02 
+* Last Modified : 09-10-2019::14:55:32 
 
 * Purpose : Manage board state and determine win conditions
 ********************************************
@@ -188,7 +188,7 @@ def check_win_cond(pieces):
 
 def xnor(a, b):
     # pylint: disable=invalid-name
-    """ standard xnor logic gate, tune for python's weirdness """
+    """ standard xnor logic gate, tuned for python's weirdness """
     # Truth table
     # A | B | Result
     # -------------
