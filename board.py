@@ -8,7 +8,7 @@
 
 * Creation Date : 08-26-2019
 
-* Last Modified : 09-10-2019::14:55:32 
+* Last Modified : 09-10-2019::19:46:56 
 
 * Purpose : Manage board state and determine win conditions
 ********************************************
@@ -48,6 +48,7 @@ class Board(object):
 
     def create_pieces(self):
         """ create an array of 16 pieces to refer as ID """
+        self.library = []
         for i in range(16):
             self.library.append(i)
 
