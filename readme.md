@@ -6,6 +6,7 @@
 - [ ] error handling for when you type wrong number
 - [ ] set player names
 - [x] create piece definitions
+- [ ] GUI app - kivy
 
 
 # Piece definitions
